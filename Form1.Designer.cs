@@ -29,13 +29,34 @@ namespace Chourbot_vacuum
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.manor = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.manor)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // manor
+            // 
+            this.manor.Location = new System.Drawing.Point(12, 12);
+            this.manor.Name = "manor";
+            this.manor.Size = new System.Drawing.Size(550, 550);
+            this.manor.TabIndex = 0;
+            this.manor.TabStop = false;
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1053, 635);
+            this.Controls.Add(this.manor);
+            this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.manor)).EndInit();
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.PictureBox manor;
     }
 }
 
