@@ -17,20 +17,17 @@ namespace Chourbot_vacuum
             Interval = 2000
         };
 
-        List<Case> cases = new List<Case>();
+        /*List<Case> cases = new List<Case>();*/
+        Case[,] cases = new Case[5, 5];
+
+        Vacuum vacuum;
 
         List<String> type_object = new List<String> { "Poussière", "bijou" };
 
         public Form1()
         {
             InitializeComponent();
-            foreach (var button in this.Controls.OfType<Button>())
-            {
-                button.Enabled = false;
-                Case new_case = new Case();
-                new_case.button = button;
-                cases.Add(new_case);
-            }
+
             t.Tick += new EventHandler(timer_tick);
             t.Start();
         }
@@ -53,7 +50,7 @@ namespace Chourbot_vacuum
             t.Interval = random.Next(5000, 10000);
         }
 
-        private void generate_Object()
+ /*       private void generate_Object()
         {
             var random = new Random();
             // Random Case Selection
@@ -70,7 +67,7 @@ namespace Chourbot_vacuum
             {
                 cases[index_random_case].spawn_jewelry();
             }
-        }
+        }*/
 
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -80,6 +77,58 @@ namespace Chourbot_vacuum
                     a_case.clean_dust();
                     a_case.clean_jewelry();
                 }
+            }
+        }
+        // création de la grille et du robot
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                grid.Rows.Add();
+            }
+            // Set width of column
+            foreach (DataGridViewColumn column in grid.Columns)
+            {
+                column.Width = 60;
+            }
+            foreach (DataGridViewRow row in grid.Rows)
+            {
+                row.Height = 60;
+            }
+
+            // Initialisation des cellules du tableau
+            for(int column=0; column < grid.Columns.Count; column++)
+            {
+                for (int row = 0; row < grid.Rows.Count; row++)
+                {
+                    Case new_case = new Case(grid[column, row], column, row);
+                    cases[column, row] = new_case;
+                }
+            }
+            // Ajout de l'aspirateur dans une case
+            vacuum = new Vacuum(cases[0,0]);
+
+        }
+
+        private void generate_Object()
+        {
+            var random = new Random();
+            
+            // Random Object Selection
+            int index_random_object_type = random.Next(50);
+
+            // Random Case Selection
+            int index_random_column = random.Next(5);
+            int index_random_row = random.Next(5);
+
+            // 80% de chance -> dust
+            if (index_random_object_type <= 40)
+            {
+                cases[index_random_column, index_random_row].spawn_dust();
+            }
+            else
+            {
+                cases[index_random_column, index_random_row].spawn_jewelry();
             }
         }
     }
