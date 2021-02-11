@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Case.cs" />
+    <Compile Include="Problem.cs" />
+    <Compile Include="State.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Sensor.cs" />
     <Compile Include="Vacuum.cs" />
     <Compile Include="Form1.cs">

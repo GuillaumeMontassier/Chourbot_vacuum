@@ -10,8 +10,7 @@ namespace Chourbot_vacuum
     public class Case
     {
         // Position
-        int x;
-        int y;
+        public int x,y;
 
         private bool jewelry = false;
         private bool dust = false;
