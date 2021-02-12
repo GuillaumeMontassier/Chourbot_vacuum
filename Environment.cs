@@ -26,7 +26,7 @@ namespace Chourbot_vacuum
         Vacuum vacuum;
 
         // état atuel du robot
-        State actual_state = new State();
+        // State actual_state = new State();
 
         // Déclaration du problème
         Problem problem;
@@ -70,7 +70,6 @@ namespace Chourbot_vacuum
             {
                 for (int row = 0; row < grid.Rows.Count; row++)
                 {
-                    /*Case new_case = new Case(grid[column, row], column, row);*/
                     Case new_case = new Case(grid[column, row]);
                     cases[column, row] = new_case;
                 }
@@ -80,7 +79,6 @@ namespace Chourbot_vacuum
 
             // Ajout de l'aspirateur dans une case
             vacuum = new Vacuum(cases[0,0]);
-            actual_state = new State(cases[0, 0]);
 
         }
 
@@ -92,6 +90,9 @@ namespace Chourbot_vacuum
             // Random Object Selection
             int index_random_object_type = random.Next(50);
 
+            // Type du nouvel objet
+            String type_object = "";
+
             // Random Case Selection
             int index_random_column = random.Next(5);
             int index_random_row = random.Next(5);
@@ -99,17 +100,16 @@ namespace Chourbot_vacuum
             // 80% de chance -> dust
             if (index_random_object_type <= 40)
             {
+                type_object = "dust";
                 cases[index_random_column, index_random_row].spawn_dust();
-                // Mis à jour de l'état actuel
-                actual_state.dust_position.Add((index_random_column, index_random_row));
-
             }
             else
             {
+                type_object = "jewelry";
                 cases[index_random_column, index_random_row].spawn_jewelry();
-                // Mis à jour de l'état actuel
-                actual_state.jewelry_position.Add((index_random_column, index_random_row));
             }
+            Object new_object = new Object((index_random_column, index_random_row), type_object);
+            vacuum.objects_searched.Add(new_object);
 
         }
 
@@ -187,17 +187,25 @@ namespace Chourbot_vacuum
         private void button2_Click(object sender, EventArgs e)
         {
             vacuum.pick_up_jewelry();
+            (int, int) no_more_jewelry_here = vacuum.belief.agent_position;
+            for (int i = 0; i < vacuum.objects_searched.Count; i++)
+            {
+                if ((vacuum.objects_searched[i].position == no_more_jewelry_here) && ((vacuum.objects_searched[i].type == "jewelry")))
+                {
+                    vacuum.objects_searched.Remove(vacuum.objects_searched[i]);
+                }
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             vacuum.clean_case();
-            (int, int) no_more_dust_here = actual_state.agent_position;
-            for(int i=0; i< actual_state.dust_position.Count; i++)
+            (int, int) no_more_object_here = vacuum.belief.agent_position;
+            for(int i=0; i< vacuum.objects_searched.Count; i++)
             {
-                if (actual_state.dust_position[i] == no_more_dust_here)
+                if (vacuum.objects_searched[i].position == no_more_object_here)
                 {
-                    actual_state.dust_position.Remove(actual_state.dust_position[i]);
+                    vacuum.objects_searched.Remove(vacuum.objects_searched[i]);
                 }
             }
         }
@@ -220,29 +228,24 @@ namespace Chourbot_vacuum
                 {
                     a_case.clean_dust();
                     a_case.clean_jewelry();
+                    vacuum.objects_searched = new List<Object>();
                 }
             }
         }
 
         private void button1_Click_2(object sender, EventArgs e)
         {
-            MessageBox.Show("Position " + actual_state.get_position());
+            MessageBox.Show("Position " + vacuum.belief.get_position());
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            List<String> actions = vacuum.explorationBFS2(cases, problem, actual_state);
+            List<String> actions = vacuum.explorationBFS(cases, problem);
             foreach (String action in actions)
             {
                 Console.WriteLine(action);
             }
-            vacuum.move(actions, cases, actual_state);
-
-/*            foreach ((int,int) dust in actual_state.dust_position)
-            {
-                Console.WriteLine(dust);
-            }*/
-            /*MessageBox.Show("Node " + actions);*/
+            vacuum.move(actions, cases);
         }
 
         private void button5_Click(object sender, EventArgs e)

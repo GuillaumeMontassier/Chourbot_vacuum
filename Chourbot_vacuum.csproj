@@ -47,21 +47,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Case.cs" />
+    <Compile Include="Object.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="State.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Sensor.cs" />
     <Compile Include="Vacuum.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Environment.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Environment.Designer.cs">
+      <DependentUpon>Environment.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Environment.resx">
+      <DependentUpon>Environment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
