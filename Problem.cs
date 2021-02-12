@@ -9,7 +9,7 @@ namespace Chourbot_vacuum
     class Problem
     {
         // état initial
-        public State initial_State = new State();
+        public State initial_State;
 
         // Actions possibles
         public List<String> actions = new List<String>(new string[] { "haut", "bas", "gauche", "droite", "aspirer", "ramasser" });
@@ -19,5 +19,10 @@ namespace Chourbot_vacuum
         // Test de l'objectif, ici grille sans poussière
 
         // Le coût du chemin
+
+        public Problem(State a_state)
+        {
+            initial_State = new State(a_state);
+        }
     }
 }

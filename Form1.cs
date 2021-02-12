@@ -28,6 +28,9 @@ namespace Chourbot_vacuum
         // état atuel du robot
         State actual_state = new State();
 
+        // Déclaration du problème
+        Problem problem;
+
 
         public form1()
         {
@@ -67,12 +70,17 @@ namespace Chourbot_vacuum
             {
                 for (int row = 0; row < grid.Rows.Count; row++)
                 {
-                    Case new_case = new Case(grid[column, row], column, row);
+                    /*Case new_case = new Case(grid[column, row], column, row);*/
+                    Case new_case = new Case(grid[column, row]);
                     cases[column, row] = new_case;
                 }
             }
+            // Création du problème
+            problem = new Problem(new State(cases[0, 0]));
+
             // Ajout de l'aspirateur dans une case
             vacuum = new Vacuum(cases[0,0]);
+            actual_state = new State(cases[0, 0]);
 
         }
 
@@ -109,7 +117,7 @@ namespace Chourbot_vacuum
 
         // ------------------------- Boutons ------------------------- 
         // move random vaccuum
-        private void button1_Click_1(object sender, EventArgs e)
+/*        private void button1_Click_1(object sender, EventArgs e)
         {
             var random = new Random();
             var direction = random.Next(4);
@@ -174,7 +182,7 @@ namespace Chourbot_vacuum
 
             // Mis à jour de l'état actuel
             actual_state.set_agent_position(new_x, new_y);
-        }
+        }*/
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -184,6 +192,14 @@ namespace Chourbot_vacuum
         private void button3_Click(object sender, EventArgs e)
         {
             vacuum.clean_case();
+            (int, int) no_more_dust_here = actual_state.agent_position;
+            for(int i=0; i< actual_state.dust_position.Count; i++)
+            {
+                if (actual_state.dust_position[i] == no_more_dust_here)
+                {
+                    actual_state.dust_position.Remove(actual_state.dust_position[i]);
+                }
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -211,6 +227,28 @@ namespace Chourbot_vacuum
         private void button1_Click_2(object sender, EventArgs e)
         {
             MessageBox.Show("Position " + actual_state.get_position());
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            List<String> actions = vacuum.explorationBFS2(cases, problem, actual_state);
+            foreach (String action in actions)
+            {
+                Console.WriteLine(action);
+            }
+            vacuum.move(actions, cases, actual_state);
+
+/*            foreach ((int,int) dust in actual_state.dust_position)
+            {
+                Console.WriteLine(dust);
+            }*/
+            /*MessageBox.Show("Node " + actions);*/
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            problem = new Problem(new State(cases[2, 2]));
+            /*vacuum.test_exploration(cases, problem);*/
         }
     }
 }

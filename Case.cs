@@ -10,26 +10,35 @@ namespace Chourbot_vacuum
     public class Case
     {
         // Position
-        public int x,y;
+       /* public int x, y;*/
 
+        public bool is_there_an_object = true;
         private bool jewelry = false;
         private bool dust = false;
         private bool is_vacuum = false;
 
+        public bool marked = false;
+
         public DataGridViewCell cell;
 
-        public Case(DataGridViewCell new_cell, int new_x, int new_y)
+        public Case(DataGridViewCell new_cell)
         {
             cell = new_cell;
-            x = new_x;
-            y = new_y;
         }
 
-        public void set_position(int new_x, int new_y)
-        {
-            x = new_x;
-            y = new_y;
-        }
+        /*        public Case(DataGridViewCell new_cell, int new_x, int new_y)
+                {
+                    cell = new_cell;
+                    x = new_x;
+                    y = new_y;
+                }*/
+
+
+        /*        public void set_position(int new_x, int new_y)
+                {
+                    x = new_x;
+                    y = new_y;
+                }*/
 
         public bool get_is_vacuum()
         {
