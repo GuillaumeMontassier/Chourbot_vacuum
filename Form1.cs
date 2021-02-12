@@ -5,8 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Chourbot_vacuum
 {
@@ -30,6 +32,17 @@ namespace Chourbot_vacuum
 
             t.Tick += new EventHandler(timer_tick);
             t.Start();
+            Life();
+        }
+
+        private void Life()
+        {
+            var thread = new Thread(() =>
+            {
+                // Initialiser l'aspirateur
+
+            });
+            thread.Start();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
