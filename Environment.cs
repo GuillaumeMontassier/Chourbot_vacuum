@@ -25,11 +25,9 @@ namespace Chourbot_vacuum
         // Aspirateur
         Vacuum vacuum;
 
-        // état atuel du robot
-        // State actual_state = new State();
+        // Problem
+        Problem problem = new Problem();
 
-        // Déclaration du problème
-        Problem problem;
 
 
         public form1()
@@ -55,11 +53,12 @@ namespace Chourbot_vacuum
             {
                 grid.Rows.Add();
             }
-            // Set width of column
+            // Largeur des colonnes
             foreach (DataGridViewColumn column in grid.Columns)
             {
                 column.Width = 60;
             }
+            // hauteur des lignes
             foreach (DataGridViewRow row in grid.Rows)
             {
                 row.Height = 60;
@@ -74,12 +73,9 @@ namespace Chourbot_vacuum
                     cases[column, row] = new_case;
                 }
             }
-            // Création du problème
-            problem = new Problem(new State(cases[0, 0]));
 
             // Ajout de l'aspirateur dans une case
             vacuum = new Vacuum(cases[0,0]);
-
         }
 
         // Génération d'objets
@@ -116,74 +112,6 @@ namespace Chourbot_vacuum
 
 
         // ------------------------- Boutons ------------------------- 
-        // move random vaccuum
-/*        private void button1_Click_1(object sender, EventArgs e)
-        {
-            var random = new Random();
-            var direction = random.Next(4);
-            int new_x = 0;
-            int new_y = 0;
-
-            // haut
-            if(direction == 0)
-            {
-                if(vacuum.get_vacuum_case().x > 0) 
-                {
-                    new_x = vacuum.get_vacuum_case().x - 1;
-                }
-                else
-                {
-                    new_x = vacuum.get_vacuum_case().x;
-                }
-            }
-            // bas
-            else if (direction == 1)
-            {
-                if(vacuum.get_vacuum_case().y < 5)
-                {
-                    new_y = vacuum.get_vacuum_case().y + 1;
-                }
-                else
-                {
-                    new_y = vacuum.get_vacuum_case().y;
-                }
-            }
-            // gauche
-            else if (direction == 2)
-            {
-                if (vacuum.get_vacuum_case().x > 0)
-                {
-                    new_x = vacuum.get_vacuum_case().x - 1;
-                }
-                else
-                {
-                    new_x = vacuum.get_vacuum_case().x;
-                }
-                
-            }
-            // droite
-            else if (direction == 3)
-            {
-                
-                if (vacuum.get_vacuum_case().x < 5)
-                {
-                    new_x = vacuum.get_vacuum_case().x + 1;
-                }
-                else
-                {
-                    new_x = vacuum.get_vacuum_case().x;
-                }
-            }
-
-
-
-            Case new_case = cases[new_x, new_y];
-            vacuum.move(new_case);
-
-            // Mis à jour de l'état actuel
-            actual_state.set_agent_position(new_x, new_y);
-        }*/
-
         private void button2_Click(object sender, EventArgs e)
         {
             vacuum.pick_up_jewelry();
@@ -215,12 +143,6 @@ namespace Chourbot_vacuum
             Application.Exit();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // Génération aléatoire d'objet
-            generate_Object();
-        }
-
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (var a_case in cases)
@@ -238,20 +160,25 @@ namespace Chourbot_vacuum
             MessageBox.Show("Position " + vacuum.belief.get_position());
         }
 
+        // Launch exploration BFS
         private void button4_Click(object sender, EventArgs e)
         {
-            List<String> actions = vacuum.explorationBFS(cases, problem);
-            foreach (String action in actions)
-            {
-                Console.WriteLine(action);
-            }
+            List<String> actions = vacuum.explorationBFS(cases);
             vacuum.move(actions, cases);
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        // launch ASTAR
+        private void launch_astar_Click(object sender, EventArgs e)
         {
-            problem = new Problem(new State(cases[2, 2]));
-            /*vacuum.test_exploration(cases, problem);*/
+            {
+                List<String> actions = vacuum.explorationASTAR();
+                vacuum.move(actions, cases);
+            }
+        }
+
+        private void restart_vacuum_position_Click(object sender, EventArgs e)
+        {
+            vacuum.restart_vacuum_position(cases);
         }
     }
 }

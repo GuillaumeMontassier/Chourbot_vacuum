@@ -42,7 +42,9 @@ namespace Chourbot_vacuum
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.launch_bfs = new System.Windows.Forms.Button();
+            this.launch_astar = new System.Windows.Forms.Button();
+            this.restart_vacuum_position = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
@@ -138,7 +140,7 @@ namespace Chourbot_vacuum
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(356, 69);
+            this.button2.Location = new System.Drawing.Point(356, 98);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 28;
@@ -148,7 +150,7 @@ namespace Chourbot_vacuum
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(356, 98);
+            this.button3.Location = new System.Drawing.Point(356, 127);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 29;
@@ -158,7 +160,7 @@ namespace Chourbot_vacuum
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(356, 127);
+            this.button1.Location = new System.Drawing.Point(356, 156);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 30;
@@ -166,22 +168,44 @@ namespace Chourbot_vacuum
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_2);
             // 
-            // button4
+            // launch_bfs
             // 
-            this.button4.Location = new System.Drawing.Point(356, 40);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 31;
-            this.button4.Text = "Launch BFS";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.launch_bfs.Location = new System.Drawing.Point(356, 40);
+            this.launch_bfs.Name = "launch_bfs";
+            this.launch_bfs.Size = new System.Drawing.Size(96, 23);
+            this.launch_bfs.TabIndex = 31;
+            this.launch_bfs.Text = "Launch BFS";
+            this.launch_bfs.UseVisualStyleBackColor = true;
+            this.launch_bfs.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // launch_astar
+            // 
+            this.launch_astar.Location = new System.Drawing.Point(458, 40);
+            this.launch_astar.Name = "launch_astar";
+            this.launch_astar.Size = new System.Drawing.Size(96, 23);
+            this.launch_astar.TabIndex = 32;
+            this.launch_astar.Text = "Launch Astar";
+            this.launch_astar.UseVisualStyleBackColor = true;
+            this.launch_astar.Click += new System.EventHandler(this.launch_astar_Click);
+            // 
+            // restart_vacuum_position
+            // 
+            this.restart_vacuum_position.Location = new System.Drawing.Point(341, 304);
+            this.restart_vacuum_position.Name = "restart_vacuum_position";
+            this.restart_vacuum_position.Size = new System.Drawing.Size(198, 23);
+            this.restart_vacuum_position.TabIndex = 33;
+            this.restart_vacuum_position.Text = "Restart Vacuum Position";
+            this.restart_vacuum_position.UseVisualStyleBackColor = true;
+            this.restart_vacuum_position.Click += new System.EventHandler(this.restart_vacuum_position_Click);
             // 
             // form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(872, 369);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.restart_vacuum_position);
+            this.Controls.Add(this.launch_astar);
+            this.Controls.Add(this.launch_bfs);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -214,7 +238,9 @@ namespace Chourbot_vacuum
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button launch_bfs;
+        private System.Windows.Forms.Button launch_astar;
+        private System.Windows.Forms.Button restart_vacuum_position;
     }
 }
 

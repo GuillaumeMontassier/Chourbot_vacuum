@@ -36,8 +36,9 @@ namespace Chourbot_vacuum
 			set { m_state = value; }
 		}
 
-		private string m_path_cost;
-		public string Path_Cost
+		// Coût résultant de la fonction heuristique dans la classe agent Vacuum.cs
+		private double m_path_cost = 100.0;
+		public double Path_Cost
 		{
 			get { return m_path_cost; }
 			set { m_path_cost = value; }
@@ -50,7 +51,7 @@ namespace Chourbot_vacuum
 			set { m_step_cost = value; }
 		}
 
-		private int m_depth; 
+		private int m_depth;
 		public int Depth
 		{
 			get { return m_depth; }

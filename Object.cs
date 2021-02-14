@@ -11,6 +11,11 @@ namespace Chourbot_vacuum
         public (int, int) position;
         public String type;
 
+
+        public Object()
+        {
+            type = "";
+        }
         public Object((int,int) new_position, String new_type)
         {
             position = new_position;

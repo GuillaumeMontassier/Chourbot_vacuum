@@ -9,10 +9,10 @@ namespace Chourbot_vacuum
     class Problem
     {
         // état initial
-        public State initial_State;
+/*        public State initial_State;*/
 
         // Actions possibles
-        public List<String> actions = new List<String>(new string[] { "haut", "bas", "gauche", "droite", "aspirer", "ramasser" });
+        public List<String> actions = new List<String>(new string[] { "up", "down", "left", "right" });
 
         // Fonction de Succession successorFN
 
@@ -20,9 +20,9 @@ namespace Chourbot_vacuum
 
         // Le coût du chemin
 
-        public Problem(State a_state)
+/*        public Problem(State a_state)
         {
             initial_State = new State(a_state);
-        }
+        }*/
     }
 }
