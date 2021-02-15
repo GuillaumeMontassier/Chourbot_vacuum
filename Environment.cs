@@ -6,17 +6,29 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using thread = System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+// using Timer1 = System.Windows.Forms;
 namespace Chourbot_vacuum
 {
     public partial class form1 : Form
     {
-        // Timer pour la génération aléatoire d'objet
-        Timer t = new Timer
+
+        thread.Thread thread1;
+
+        bool is_vacuum_alive = false;
+
+        // Timer pour la génération aléatoire d'objets
+        Timer t1 = new Timer
         {
             Interval = 2000
+        };
+
+        Timer t2 = new Timer
+        {
+            Interval = 500
         };
 
         // Tableau des cases 5 par 5
@@ -28,22 +40,39 @@ namespace Chourbot_vacuum
         // Problem
         Problem problem = new Problem();
 
+        // Mesure de performance
+        int performance_mesure = 0;
 
 
         public form1()
         {
             InitializeComponent();
 
-            t.Tick += new EventHandler(timer_tick);
-            t.Start();
+            // Initialisation les boutons
+            start_vacuum.Enabled = false;
+            stop_vacuum.Enabled = false;
+
+            t1.Tick += new EventHandler(timer_tick);
+            t1.Start();
+
+            t2.Tick += new EventHandler(timer_refresh_tick);
+            t2.Start();
         }
 
-        // Timer à partir duquel on fait spawn les objets
+        // Timer à partir duquel on fait spawn les objets (ici toutes les 2 secondes)
         private void timer_tick(object sender, EventArgs e)
         {
             generate_Object();
             var random = new Random();
-            t.Interval = random.Next(5000, 10000);
+            t1.Interval = random.Next(5000, 10000);
+        }
+
+        // On rafraichit l'affichages toutes les 0.5 secondes.
+        private void timer_refresh_tick(object sender, EventArgs e)
+        {
+            bfs_iteration_number.Text = vacuum.get_number_iteration_BFS().ToString();
+            astar_iteration_number.Text = vacuum.get_number_iteration_astar().ToString();
+            electricity_number.Text = vacuum.get_electricity_number().ToString();
         }
 
         // création de la grille et du robot 
@@ -56,12 +85,12 @@ namespace Chourbot_vacuum
             // Largeur des colonnes
             foreach (DataGridViewColumn column in grid.Columns)
             {
-                column.Width = 60;
+                column.Width = 80;
             }
             // hauteur des lignes
             foreach (DataGridViewRow row in grid.Rows)
             {
-                row.Height = 60;
+                row.Height = 80;
             }
 
             // Initialisation des cellules du tableau
@@ -76,6 +105,33 @@ namespace Chourbot_vacuum
 
             // Ajout de l'aspirateur dans une case
             vacuum = new Vacuum(cases[0,0]);
+
+            // Lancement du thread de l'agent
+            thread1 = new thread.Thread(new thread.ThreadStart(vacuum_live));
+
+/*            electricity.Text = vacuum.electricity_unit.ToString();*/
+        }
+        private void vacuum_live()
+        {
+            while (is_vacuum_alive) {
+                if(vacuum.objects_searched.Count == 0)
+                {
+                    vacuum.set_electricity_number(0);
+                }
+                List<String> actions = new List<String>();
+
+                // Choix de l'algorithme d'exploration
+                if (breadth_first_search.Checked)
+                    actions = vacuum.explorationBFS();
+                else if(a_star.Checked)
+                    actions = vacuum.explorationASTAR();
+                
+                vacuum.move(actions, cases);
+
+                // Choose action and do it
+                vacuum.choose_action();
+
+            }
         }
 
         // Génération d'objets
@@ -112,31 +168,6 @@ namespace Chourbot_vacuum
 
 
         // ------------------------- Boutons ------------------------- 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            vacuum.pick_up_jewelry();
-            (int, int) no_more_jewelry_here = vacuum.belief.agent_position;
-            for (int i = 0; i < vacuum.objects_searched.Count; i++)
-            {
-                if ((vacuum.objects_searched[i].position == no_more_jewelry_here) && ((vacuum.objects_searched[i].type == "jewelry")))
-                {
-                    vacuum.objects_searched.Remove(vacuum.objects_searched[i]);
-                }
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            vacuum.clean_case();
-            (int, int) no_more_object_here = vacuum.belief.agent_position;
-            for(int i=0; i< vacuum.objects_searched.Count; i++)
-            {
-                if (vacuum.objects_searched[i].position == no_more_object_here)
-                {
-                    vacuum.objects_searched.Remove(vacuum.objects_searched[i]);
-                }
-            }
-        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -155,30 +186,37 @@ namespace Chourbot_vacuum
             }
         }
 
-        private void button1_Click_2(object sender, EventArgs e)
-        {
-            MessageBox.Show("Position " + vacuum.belief.get_position());
-        }
-
-        // Launch exploration BFS
-        private void button4_Click(object sender, EventArgs e)
-        {
-            List<String> actions = vacuum.explorationBFS(cases);
-            vacuum.move(actions, cases);
-        }
-
-        // launch ASTAR
-        private void launch_astar_Click(object sender, EventArgs e)
-        {
-            {
-                List<String> actions = vacuum.explorationASTAR();
-                vacuum.move(actions, cases);
-            }
-        }
-
         private void restart_vacuum_position_Click(object sender, EventArgs e)
         {
             vacuum.restart_vacuum_position(cases);
+        }
+
+        private void breadth_first_search_CheckedChanged(object sender, EventArgs e)
+        {
+            start_vacuum.Enabled = true;
+        }
+
+        private void a_star_CheckedChanged(object sender, EventArgs e)
+        {
+            start_vacuum.Enabled = true;
+        }
+
+        private void stop_vacuum_Click(object sender, EventArgs e)
+        {
+            /*if (thread1.IsAlive)
+                thread1.Interrupt();*/
+            is_vacuum_alive = false;
+            start_vacuum.Enabled = true;
+            stop_vacuum.Enabled = false;
+        }
+
+        private void start_vacuum_Click(object sender, EventArgs e)
+        {
+            is_vacuum_alive = true;
+            if (!thread1.IsAlive)
+                thread1.Start();
+            start_vacuum.Enabled = false;
+            stop_vacuum.Enabled = true;
         }
     }
 }

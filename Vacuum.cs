@@ -24,8 +24,15 @@ namespace Chourbot_vacuum
         // Intentions
         public List<String> intentions = new List<String>(new string[] { "up", "down", "left", "right"});
 
-        Case vacuum_case;
+        // Case sur laquelle se situe l'aspirateur
+        public Case vacuum_case;
+
+        int electricity_unit;
+
         int jewelry_picked_up = 0;
+
+        int number_iteration_BFS = 0;
+        int number_iteration_astar = 0;
 
         public Vacuum(Case new_vacuum_case)
         {
@@ -39,6 +46,25 @@ namespace Chourbot_vacuum
         public Case get_vacuum_case()
         {
             return vacuum_case;
+        }
+
+        public int get_number_iteration_BFS()
+        {
+            return number_iteration_BFS;
+        }
+
+        public int get_number_iteration_astar()
+        {
+            return number_iteration_astar;
+        }
+
+        public int get_electricity_number()
+        {
+            return electricity_unit;
+        }
+        public void set_electricity_number(int new_number)
+        {
+            electricity_unit = new_number;
         }
 
         // Reinitialise la position de l'aspirateur en (0,0)
@@ -55,6 +81,9 @@ namespace Chourbot_vacuum
         {
             int x = belief.get_position().Item1;
             int y = belief.get_position().Item2;
+
+
+
             foreach (String action in actions)
             {
                 vacuum_case.set_is_vacuum(false);
@@ -78,6 +107,16 @@ namespace Chourbot_vacuum
                 vacuum_case = cases[x, y];
                 vacuum_case.set_is_vacuum(true);
                 belief.set_agent_position(x, y);
+
+                // Une unité supplémentaire lorsqu'un mouvement est produit
+                electricity_unit++;
+
+                // Refresh du visuel
+                foreach(Case a_case in cases){
+                    a_case.case_text();
+                }
+                // Temporisation de 0.5 entre chaque action
+                Thread.Sleep(500);
             }
         }
 
@@ -86,12 +125,45 @@ namespace Chourbot_vacuum
         {
             vacuum_case.clean_jewelry();
             vacuum_case.clean_dust();
+
+                            electricity_unit++;
+
+            (int, int) no_more_object_here = belief.agent_position;
+            for (int i = 0; i < objects_searched.Count; i++)
+            {
+                if (objects_searched[i].position == no_more_object_here)
+                {
+                    objects_searched.Remove(objects_searched[i]);
+                }
+            }
         }
+
         // Ramasser le bijou de la case
         public void pick_up_jewelry()
         {
             vacuum_case.clean_jewelry();
             jewelry_picked_up++;
+            (int, int) no_more_jewelry_here = belief.agent_position;
+            for (int i = 0; i < objects_searched.Count; i++)
+            {
+                if ((objects_searched[i].position == no_more_jewelry_here) && ((objects_searched[i].type == "jewelry")))
+                {
+                    objects_searched.Remove(objects_searched[i]);
+                }
+            }
+        }
+
+        public void choose_action()
+        {
+            electricity_unit++;
+            if (vacuum_case.get_jewelry_status())
+            {
+                pick_up_jewelry();
+            }
+            else if (vacuum_case.get_dust_status())
+            {
+                clean_case();
+            }
         }
 
         // Création de noeuds à partir du noeuds passer en paramètre et de la liste d'actions possibles
@@ -164,14 +236,14 @@ namespace Chourbot_vacuum
 
             double distance_object_searched = 100;
 
-            foreach (Object an_object in objects_searched)
+            for(int i = 0 ; i < objects_searched.Count; i++)
             {
-                double distance = Math.Sqrt(Math.Pow(an_object.position.Item1 - vacuum_x, 2) + Math.Pow(an_object.position.Item2 - vacuum_y, 2));
+                double distance = Math.Sqrt(Math.Pow(objects_searched[i].position.Item1 - vacuum_x, 2) + Math.Pow(objects_searched[i].position.Item2 - vacuum_y, 2));
 
                 if (distance_object_searched > distance)
                 {
                     distance_object_searched = distance;
-                    object_searched = an_object;
+                    object_searched = objects_searched[i];
                 }
             }
             return object_searched;
@@ -186,8 +258,8 @@ namespace Chourbot_vacuum
         }
 
 
-        // ------------- AlgorithmeS d'exploration -------------
-        public List<String> explorationBFS(Case[,] cases)
+        // ------------- Algorithmes d'exploration -------------
+        public List<String> explorationBFS()
         {
             // Listes d'actions à retourner
             List<String> sequence_actions = new List<string>();
@@ -203,7 +275,7 @@ namespace Chourbot_vacuum
 
             nodes_to_be_explored.Enqueue(curent_node);
 
-            int i = 0;
+            int iteration_number = 0;
             bool leave = false;
 
             while (nodes_to_be_explored.Count != 0)
@@ -214,9 +286,9 @@ namespace Chourbot_vacuum
                 marked_positions.Add(curent_node.State.agent_position);
 
                 // Atteindre l'objectif
-                foreach (Object object_search in objects_searched)
+                for(int i = 0; i< objects_searched.Count; i++)
                 {
-                    if (object_search.position == curent_node.State.agent_position)
+                    if (objects_searched[i].position == curent_node.State.agent_position)
                     {
                         sequence_actions = curent_node.Action;
                         leave = true;
@@ -239,10 +311,11 @@ namespace Chourbot_vacuum
                         nodes_to_be_explored.Enqueue(child_node);
                     }
                 }
-                i++;
+                iteration_number++;
             }
-            Console.WriteLine("Nombre d'itérations de l'algorithme BFS : " + i);
+            // Console.WriteLine("Nombre d'itérations de l'algorithme BFS : " + iteration_number);
             // Retourne une séquence d'actions si l'agent trouve un objet
+            number_iteration_BFS = iteration_number;
             return sequence_actions;
         }
 
@@ -276,8 +349,8 @@ namespace Chourbot_vacuum
             nodes_to_be_explored.Enqueue(curent_node);
 
             marked_positions.Add(curent_node.State.agent_position);
-            
-            int i = 0;
+
+            int iteration_number = 0;
 
             while (nodes_to_be_explored.Count != 0)
             {
@@ -312,9 +385,10 @@ namespace Chourbot_vacuum
                         nodes_to_be_explored.Enqueue(child_node);
                     }
                 }
-                i++;
+                iteration_number++;
             }
-            Console.WriteLine("Nombre d'itérations de l'algorithme Astar : " + i);
+            // Console.WriteLine("Nombre d'itérations de l'algorithme Astar : " + i);
+            number_iteration_astar = iteration_number; 
             return sequence_actions;
         }
     }

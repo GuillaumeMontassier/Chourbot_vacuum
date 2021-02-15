@@ -39,14 +39,24 @@ namespace Chourbot_vacuum
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.launch_bfs = new System.Windows.Forms.Button();
-            this.launch_astar = new System.Windows.Forms.Button();
             this.restart_vacuum_position = new System.Windows.Forms.Button();
+            this.start_vacuum = new System.Windows.Forms.Button();
+            this.breadth_first_search = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.a_star = new System.Windows.Forms.RadioButton();
+            this.stop_vacuum = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.bfs_iteration_number = new System.Windows.Forms.Label();
+            this.astar_iteration_number = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.electricity_number = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -105,7 +115,7 @@ namespace Chourbot_vacuum
             this.grid.RowHeadersVisible = false;
             this.grid.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.grid.ShowEditingIcon = false;
-            this.grid.Size = new System.Drawing.Size(300, 300);
+            this.grid.Size = new System.Drawing.Size(400, 400);
             this.grid.TabIndex = 26;
             // 
             // Column1
@@ -138,59 +148,9 @@ namespace Chourbot_vacuum
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(356, 98);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 28;
-            this.button2.Text = "pickUp";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(356, 127);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 29;
-            this.button3.Text = "clean";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(356, 156);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 30;
-            this.button1.Text = "display";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_2);
-            // 
-            // launch_bfs
-            // 
-            this.launch_bfs.Location = new System.Drawing.Point(356, 40);
-            this.launch_bfs.Name = "launch_bfs";
-            this.launch_bfs.Size = new System.Drawing.Size(96, 23);
-            this.launch_bfs.TabIndex = 31;
-            this.launch_bfs.Text = "Launch BFS";
-            this.launch_bfs.UseVisualStyleBackColor = true;
-            this.launch_bfs.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // launch_astar
-            // 
-            this.launch_astar.Location = new System.Drawing.Point(458, 40);
-            this.launch_astar.Name = "launch_astar";
-            this.launch_astar.Size = new System.Drawing.Size(96, 23);
-            this.launch_astar.TabIndex = 32;
-            this.launch_astar.Text = "Launch Astar";
-            this.launch_astar.UseVisualStyleBackColor = true;
-            this.launch_astar.Click += new System.EventHandler(this.launch_astar_Click);
-            // 
             // restart_vacuum_position
             // 
-            this.restart_vacuum_position.Location = new System.Drawing.Point(341, 304);
+            this.restart_vacuum_position.Location = new System.Drawing.Point(446, 404);
             this.restart_vacuum_position.Name = "restart_vacuum_position";
             this.restart_vacuum_position.Size = new System.Drawing.Size(198, 23);
             this.restart_vacuum_position.TabIndex = 33;
@@ -198,17 +158,141 @@ namespace Chourbot_vacuum
             this.restart_vacuum_position.UseVisualStyleBackColor = true;
             this.restart_vacuum_position.Click += new System.EventHandler(this.restart_vacuum_position_Click);
             // 
+            // start_vacuum
+            // 
+            this.start_vacuum.AllowDrop = true;
+            this.start_vacuum.Location = new System.Drawing.Point(477, 124);
+            this.start_vacuum.Name = "start_vacuum";
+            this.start_vacuum.Size = new System.Drawing.Size(96, 23);
+            this.start_vacuum.TabIndex = 35;
+            this.start_vacuum.Text = "Start Vacuum";
+            this.start_vacuum.UseVisualStyleBackColor = true;
+            this.start_vacuum.Click += new System.EventHandler(this.start_vacuum_Click);
+            // 
+            // breadth_first_search
+            // 
+            this.breadth_first_search.AutoSize = true;
+            this.breadth_first_search.Location = new System.Drawing.Point(6, 19);
+            this.breadth_first_search.Name = "breadth_first_search";
+            this.breadth_first_search.Size = new System.Drawing.Size(121, 17);
+            this.breadth_first_search.TabIndex = 36;
+            this.breadth_first_search.TabStop = true;
+            this.breadth_first_search.Text = "Breadth-First Search";
+            this.breadth_first_search.UseVisualStyleBackColor = true;
+            this.breadth_first_search.CheckedChanged += new System.EventHandler(this.breadth_first_search_CheckedChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.a_star);
+            this.groupBox1.Controls.Add(this.breadth_first_search);
+            this.groupBox1.Location = new System.Drawing.Point(446, 38);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(147, 80);
+            this.groupBox1.TabIndex = 37;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Choose an algorithm";
+            // 
+            // a_star
+            // 
+            this.a_star.AutoSize = true;
+            this.a_star.Location = new System.Drawing.Point(6, 49);
+            this.a_star.Name = "a_star";
+            this.a_star.Size = new System.Drawing.Size(36, 17);
+            this.a_star.TabIndex = 37;
+            this.a_star.TabStop = true;
+            this.a_star.Text = "A*";
+            this.a_star.UseVisualStyleBackColor = true;
+            this.a_star.CheckedChanged += new System.EventHandler(this.a_star_CheckedChanged);
+            // 
+            // stop_vacuum
+            // 
+            this.stop_vacuum.Location = new System.Drawing.Point(477, 153);
+            this.stop_vacuum.Name = "stop_vacuum";
+            this.stop_vacuum.Size = new System.Drawing.Size(96, 23);
+            this.stop_vacuum.TabIndex = 38;
+            this.stop_vacuum.Text = "Stop Vacuum";
+            this.stop_vacuum.UseVisualStyleBackColor = true;
+            this.stop_vacuum.Click += new System.EventHandler(this.stop_vacuum_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(26, 26);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(27, 13);
+            this.label1.TabIndex = 39;
+            this.label1.Text = "BFS";
+            // 
+            // bfs_iteration_number
+            // 
+            this.bfs_iteration_number.AutoSize = true;
+            this.bfs_iteration_number.Location = new System.Drawing.Point(73, 28);
+            this.bfs_iteration_number.Name = "bfs_iteration_number";
+            this.bfs_iteration_number.Size = new System.Drawing.Size(13, 13);
+            this.bfs_iteration_number.TabIndex = 40;
+            this.bfs_iteration_number.Text = "0";
+            // 
+            // astar_iteration_number
+            // 
+            this.astar_iteration_number.AutoSize = true;
+            this.astar_iteration_number.Location = new System.Drawing.Point(73, 58);
+            this.astar_iteration_number.Name = "astar_iteration_number";
+            this.astar_iteration_number.Size = new System.Drawing.Size(13, 13);
+            this.astar_iteration_number.TabIndex = 42;
+            this.astar_iteration_number.Text = "0";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(35, 58);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(18, 13);
+            this.label6.TabIndex = 44;
+            this.label6.Text = "A*";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.bfs_iteration_number);
+            this.groupBox2.Controls.Add(this.astar_iteration_number);
+            this.groupBox2.Location = new System.Drawing.Point(599, 38);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(125, 80);
+            this.groupBox2.TabIndex = 45;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Iteration Number";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.electricity_number);
+            this.groupBox3.Location = new System.Drawing.Point(599, 124);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(125, 57);
+            this.groupBox3.TabIndex = 46;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "electricity consummed";
+            // 
+            // electricity_number
+            // 
+            this.electricity_number.AutoSize = true;
+            this.electricity_number.Location = new System.Drawing.Point(66, 25);
+            this.electricity_number.Name = "electricity_number";
+            this.electricity_number.Size = new System.Drawing.Size(13, 13);
+            this.electricity_number.TabIndex = 0;
+            this.electricity_number.Text = "0";
+            // 
             // form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(872, 369);
+            this.ClientSize = new System.Drawing.Size(872, 460);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.stop_vacuum);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.start_vacuum);
             this.Controls.Add(this.restart_vacuum_position);
-            this.Controls.Add(this.launch_astar);
-            this.Controls.Add(this.launch_bfs);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.grid);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -219,6 +303,12 @@ namespace Chourbot_vacuum
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -235,12 +325,19 @@ namespace Chourbot_vacuum
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button launch_bfs;
-        private System.Windows.Forms.Button launch_astar;
         private System.Windows.Forms.Button restart_vacuum_position;
+        private System.Windows.Forms.Button start_vacuum;
+        private System.Windows.Forms.RadioButton breadth_first_search;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton a_star;
+        private System.Windows.Forms.Button stop_vacuum;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label bfs_iteration_number;
+        private System.Windows.Forms.Label astar_iteration_number;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label electricity_number;
     }
 }
 
