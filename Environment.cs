@@ -10,13 +10,12 @@ using thread = System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-// using Timer1 = System.Windows.Forms;
 namespace Chourbot_vacuum
 {
     public partial class form1 : Form
     {
-
-        thread.Thread thread1;
+        // Thread contenant le cycle de vie de l'aspirateur
+        thread.Thread thread_vacuum_live;
 
         bool is_vacuum_alive = false;
 
@@ -31,7 +30,7 @@ namespace Chourbot_vacuum
             Interval = 500
         };
 
-        // Tableau des cases 5 par 5
+        // Tableau des cases 5 par 5 
         Case[,] cases = new Case[5, 5];
 
         // Aspirateur
@@ -48,9 +47,8 @@ namespace Chourbot_vacuum
         {
             InitializeComponent();
 
-            // Initialisation les boutons
+            // Initialisation du bouton start
             start_vacuum.Enabled = false;
-            stop_vacuum.Enabled = false;
 
             t1.Tick += new EventHandler(timer_tick);
             t1.Start();
@@ -59,20 +57,21 @@ namespace Chourbot_vacuum
             t2.Start();
         }
 
-        // Timer à partir duquel on fait spawn les objets (ici toutes les 2 secondes)
+        // Fonction qui va générer aléatoirement un objet toutes les 3 à 8 secondes
         private void timer_tick(object sender, EventArgs e)
         {
             generate_Object();
             var random = new Random();
-            t1.Interval = random.Next(5000, 10000);
+            t1.Interval = random.Next(3000, 8000);
         }
 
-        // On rafraichit l'affichages toutes les 0.5 secondes.
+        // Fonction pour rafraichirl'affichage toutes les 0.5 secondes.
         private void timer_refresh_tick(object sender, EventArgs e)
         {
             bfs_iteration_number.Text = vacuum.get_number_iteration_BFS().ToString();
             astar_iteration_number.Text = vacuum.get_number_iteration_astar().ToString();
             electricity_number.Text = vacuum.get_electricity_number().ToString();
+            jewel_pick_up.Text = vacuum.get_jewel_pick_up().ToString();
         }
 
         // création de la grille et du robot 
@@ -107,10 +106,10 @@ namespace Chourbot_vacuum
             vacuum = new Vacuum(cases[0,0]);
 
             // Lancement du thread de l'agent
-            thread1 = new thread.Thread(new thread.ThreadStart(vacuum_live));
-
-/*            electricity.Text = vacuum.electricity_unit.ToString();*/
+            thread_vacuum_live = new thread.Thread(new thread.ThreadStart(vacuum_live));
         }
+
+        // Cycle de vie de l'agent
         private void vacuum_live()
         {
             while (is_vacuum_alive) {
@@ -120,12 +119,13 @@ namespace Chourbot_vacuum
                 }
                 List<String> actions = new List<String>();
 
-                // Choix de l'algorithme d'exploration
+                // Choix de l'algorithme d'exploration (en fonction de l'état des radios buttons
                 if (breadth_first_search.Checked)
                     actions = vacuum.explorationBFS();
                 else if(a_star.Checked)
                     actions = vacuum.explorationASTAR();
                 
+                // On déplace l'aspirateur
                 vacuum.move(actions, cases);
 
                 // Choose action and do it
@@ -139,13 +139,13 @@ namespace Chourbot_vacuum
         {
             var random = new Random();
             
-            // Random Object Selection
+            // Sélection d'un objet aléatoire
             int index_random_object_type = random.Next(50);
 
             // Type du nouvel objet
             String type_object = "";
 
-            // Random Case Selection
+            // Sélection d'une case aléatoire
             int index_random_column = random.Next(5);
             int index_random_row = random.Next(5);
 
@@ -201,22 +201,12 @@ namespace Chourbot_vacuum
             start_vacuum.Enabled = true;
         }
 
-        private void stop_vacuum_Click(object sender, EventArgs e)
-        {
-            /*if (thread1.IsAlive)
-                thread1.Interrupt();*/
-            is_vacuum_alive = false;
-            start_vacuum.Enabled = true;
-            stop_vacuum.Enabled = false;
-        }
-
         private void start_vacuum_Click(object sender, EventArgs e)
         {
             is_vacuum_alive = true;
-            if (!thread1.IsAlive)
-                thread1.Start();
+            if (!thread_vacuum_live.IsAlive)
+                thread_vacuum_live.Start();
             start_vacuum.Enabled = false;
-            stop_vacuum.Enabled = true;
         }
     }
 }

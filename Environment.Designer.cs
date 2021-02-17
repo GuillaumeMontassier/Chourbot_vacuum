@@ -44,7 +44,6 @@ namespace Chourbot_vacuum
             this.breadth_first_search = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.a_star = new System.Windows.Forms.RadioButton();
-            this.stop_vacuum = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.bfs_iteration_number = new System.Windows.Forms.Label();
             this.astar_iteration_number = new System.Windows.Forms.Label();
@@ -52,11 +51,17 @@ namespace Chourbot_vacuum
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.electricity_number = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.jewel_pick_up = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -161,7 +166,7 @@ namespace Chourbot_vacuum
             // start_vacuum
             // 
             this.start_vacuum.AllowDrop = true;
-            this.start_vacuum.Location = new System.Drawing.Point(477, 124);
+            this.start_vacuum.Location = new System.Drawing.Point(548, 196);
             this.start_vacuum.Name = "start_vacuum";
             this.start_vacuum.Size = new System.Drawing.Size(96, 23);
             this.start_vacuum.TabIndex = 35;
@@ -203,16 +208,6 @@ namespace Chourbot_vacuum
             this.a_star.Text = "A*";
             this.a_star.UseVisualStyleBackColor = true;
             this.a_star.CheckedChanged += new System.EventHandler(this.a_star_CheckedChanged);
-            // 
-            // stop_vacuum
-            // 
-            this.stop_vacuum.Location = new System.Drawing.Point(477, 153);
-            this.stop_vacuum.Name = "stop_vacuum";
-            this.stop_vacuum.Size = new System.Drawing.Size(96, 23);
-            this.stop_vacuum.TabIndex = 38;
-            this.stop_vacuum.Text = "Stop Vacuum";
-            this.stop_vacuum.UseVisualStyleBackColor = true;
-            this.stop_vacuum.Click += new System.EventHandler(this.stop_vacuum_Click);
             // 
             // label1
             // 
@@ -282,14 +277,63 @@ namespace Chourbot_vacuum
             this.electricity_number.TabIndex = 0;
             this.electricity_number.Text = "0";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label5);
+            this.groupBox4.Controls.Add(this.label4);
+            this.groupBox4.Controls.Add(this.label3);
+            this.groupBox4.Controls.Add(this.jewel_pick_up);
+            this.groupBox4.Location = new System.Drawing.Point(446, 124);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(147, 57);
+            this.groupBox4.TabIndex = 47;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Objets ramassés";
+            // 
+            // jewel_pick_up
+            // 
+            this.jewel_pick_up.AutoSize = true;
+            this.jewel_pick_up.Location = new System.Drawing.Point(47, 25);
+            this.jewel_pick_up.Name = "jewel_pick_up";
+            this.jewel_pick_up.Size = new System.Drawing.Size(13, 13);
+            this.jewel_pick_up.TabIndex = 0;
+            this.jewel_pick_up.Text = "0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(114, 25);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(13, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "0";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(79, 25);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Dust";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 25);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(34, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Jewel";
+            // 
             // form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(872, 460);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.stop_vacuum);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.start_vacuum);
             this.Controls.Add(this.restart_vacuum_position);
@@ -309,6 +353,8 @@ namespace Chourbot_vacuum
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -330,7 +376,6 @@ namespace Chourbot_vacuum
         private System.Windows.Forms.RadioButton breadth_first_search;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton a_star;
-        private System.Windows.Forms.Button stop_vacuum;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label bfs_iteration_number;
         private System.Windows.Forms.Label astar_iteration_number;
@@ -338,6 +383,11 @@ namespace Chourbot_vacuum
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label electricity_number;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label jewel_pick_up;
     }
 }
 

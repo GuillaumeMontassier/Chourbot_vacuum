@@ -10,18 +10,18 @@ namespace Chourbot_vacuum
     class Vacuum
     {
         // Modèle BDI
-        // Croyance
+        // Croyance - Situation dans laquelle se trouve l'agent avec sa position
         public State belief = new State();
 
 
-        // Desire - 1 pour chaque algorithme
+        // Desire - 1 ojectif pour chaque algorithme
         // 1 - Trouver un élément de la liste d'objets (Objectif pour l'algorithme BFS)
         public List<Object> objects_searched = new List<Object>();
 
         // 2 - Trouver l'objet le plus proche en un minimum de coups (Objectif pour l'algorithme Astar)
         public Object priority_wanted_object = new Object();
 
-        // Intentions
+        // Intentions - Liste des actions disponibles pour l'agent
         public List<String> intentions = new List<String>(new string[] { "up", "down", "left", "right"});
 
         // Case sur laquelle se situe l'aspirateur
@@ -31,6 +31,7 @@ namespace Chourbot_vacuum
 
         int jewelry_picked_up = 0;
 
+        // Nombre d'itération de chaque algorithme avant de trouver une objet
         int number_iteration_BFS = 0;
         int number_iteration_astar = 0;
 
@@ -62,6 +63,13 @@ namespace Chourbot_vacuum
         {
             return electricity_unit;
         }
+
+        public int get_jewel_pick_up()
+        {
+            return jewelry_picked_up;
+        }
+
+
         public void set_electricity_number(int new_number)
         {
             electricity_unit = new_number;
@@ -115,7 +123,7 @@ namespace Chourbot_vacuum
                 foreach(Case a_case in cases){
                     a_case.case_text();
                 }
-                // Temporisation de 0.5 entre chaque action
+                // Temporisation de 0.5 entre chaque action - pour avoir le temps de visualiser les déplacements de l'aspirateur
                 Thread.Sleep(500);
             }
         }
@@ -126,8 +134,9 @@ namespace Chourbot_vacuum
             vacuum_case.clean_jewelry();
             vacuum_case.clean_dust();
 
-                            electricity_unit++;
+            electricity_unit++;
 
+            // On supprime de la liste objects_searched l'objet qui a été supprimé (clean)
             (int, int) no_more_object_here = belief.agent_position;
             for (int i = 0; i < objects_searched.Count; i++)
             {
@@ -143,6 +152,7 @@ namespace Chourbot_vacuum
         {
             vacuum_case.clean_jewelry();
             jewelry_picked_up++;
+            // On supprime de la liste objects_searched le bijou qui a été supprimé (clean)
             (int, int) no_more_jewelry_here = belief.agent_position;
             for (int i = 0; i < objects_searched.Count; i++)
             {
@@ -153,6 +163,7 @@ namespace Chourbot_vacuum
             }
         }
 
+        // Choisi une action en fonction du type de l'objet
         public void choose_action()
         {
             electricity_unit++;
@@ -166,7 +177,7 @@ namespace Chourbot_vacuum
             }
         }
 
-        // Création de noeuds à partir du noeuds passer en paramètre et de la liste d'actions possibles
+        // Création de noeuds à partir du noeud passé en paramètre et de la liste d'actions possibles (haut, bas, gauche, droite)
         public List<Node> expand(Node curent_node)
         {
             List<Node> nodes = new List<Node>();
@@ -213,7 +224,7 @@ namespace Chourbot_vacuum
             return nodes;
         }
 
-        // Renvoie vrai si la case testé à déjà été visitée
+        // Renvoie vrai si la case testée a déjà été visitée
         public bool test_marked_state(List<(int, int)> marked_states, (int, int) agent_position)
         {
             foreach ((int, int) marked_state in marked_states)
@@ -264,10 +275,10 @@ namespace Chourbot_vacuum
             // Listes d'actions à retourner
             List<String> sequence_actions = new List<string>();
 
-            // Liste de coordonner marqué
+            // Liste de coordonnées marquées
             List<(int, int)> marked_positions = new List<(int, int)>();
 
-            // Noeud courant
+            // Noeud courant (en fontion de la position actuel de l'aspirateur)
             Node curent_node = new Node(belief);
 
             // Liste des états à explorer
@@ -280,9 +291,10 @@ namespace Chourbot_vacuum
 
             while (nodes_to_be_explored.Count != 0)
             {
+                // On récupère le premier noeud
                 curent_node = nodes_to_be_explored.Dequeue();
                 
-                // On marque le noeud qui vient d'être exploité
+                // Marquage du noeud qui vient d'être exploité
                 marked_positions.Add(curent_node.State.agent_position);
 
                 // Atteindre l'objectif
@@ -303,7 +315,7 @@ namespace Chourbot_vacuum
                 // Liste de nouveaux noeuds créer à partir du noeud courrant
                 List<Node> new_nodes = new List<Node>(expand(curent_node));
 
-                // On ajoute les noeuds valides à la queue
+                // On ajoute les noeuds non marqué à la queue
                 foreach (Node child_node in new_nodes)
                 {
                     if(!(test_marked_state(marked_positions, (child_node.State.agent_position.Item1, child_node.State.agent_position.Item2))))
@@ -313,13 +325,14 @@ namespace Chourbot_vacuum
                 }
                 iteration_number++;
             }
-            // Console.WriteLine("Nombre d'itérations de l'algorithme BFS : " + iteration_number);
-            // Retourne une séquence d'actions si l'agent trouve un objet
+
             number_iteration_BFS = iteration_number;
+
+            // Retourne une séquence d'actions à effectuer
             return sequence_actions;
         }
 
-
+        // Exploration en s'appuyant sur l'algorithme A*
         public List<String> explorationASTAR()
         {
             // Listes d'actions à retourner
@@ -334,7 +347,7 @@ namespace Chourbot_vacuum
                 return sequence_actions;
             }
 
-            // Liste de coordonnées marqués
+            // Liste de coordonnées marquées
             List<(int, int)> marked_positions = new List<(int, int)>();
 
             // Noeud courant
@@ -343,7 +356,7 @@ namespace Chourbot_vacuum
             // Liste des états à explorer
             Queue<Node> nodes_to_be_explored = new Queue<Node>();
 
-            // Liste pour trier les noeuds par ordre de priorité en fonction de l'heuristique
+            // Liste pour trier les noeuds par ordre de priorité en fonction du calcul de l'heuristique
             List<Node> nodes_to_be_explored_ordered = new List<Node>();
 
             nodes_to_be_explored.Enqueue(curent_node);
@@ -354,7 +367,7 @@ namespace Chourbot_vacuum
 
             while (nodes_to_be_explored.Count != 0)
             {
-                // Ranger dans l'ordre les éléments de la liste
+                // Ranger dans l'ordre les éléments de la liste en fonction du coût
                 nodes_to_be_explored_ordered = nodes_to_be_explored.ToList();
                 nodes_to_be_explored = new Queue<Node>(nodes_to_be_explored.OrderBy(node => node.Path_Cost));
 
@@ -373,7 +386,7 @@ namespace Chourbot_vacuum
                 // Liste de nouveaux noeuds créer à partir du noeud courrant
                 List<Node> new_nodes = new List<Node>(expand(curent_node));
 
-                // On ajoute les noeuds valides à la queue
+                // On ajoute les noeuds valides ( à la queue
                 foreach (Node child_node in new_nodes)
                 {
                     int agent_x = child_node.State.agent_position.Item1;
