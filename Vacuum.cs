@@ -22,7 +22,12 @@ namespace Chourbot_vacuum
         public Object priority_wanted_object = new Object();
 
         // Intentions - Liste des actions disponibles pour l'agent
-        public List<String> intentions = new List<String>(new string[] { "up", "down", "left", "right"});
+        // public List<String> intentions = new List<String>(new string[] { "up", "down", "left", "right"});
+        public List<String> intentions = new List<string>();
+
+
+        // Problem
+        Problem problem = new Problem();
 
         // Case sur laquelle se situe l'aspirateur
         public Case vacuum_case;
@@ -30,6 +35,7 @@ namespace Chourbot_vacuum
         int electricity_unit;
 
         int jewelry_picked_up = 0;
+        int dust_cleaned = 0;
 
         // Nombre d'itération de chaque algorithme avant de trouver une objet
         int number_iteration_BFS = 0;
@@ -69,46 +75,44 @@ namespace Chourbot_vacuum
             return jewelry_picked_up;
         }
 
+        public int get_dust_cleaned()
+        {
+            return dust_cleaned;
+        }
 
         public void set_electricity_number(int new_number)
         {
             electricity_unit = new_number;
         }
 
-        // Reinitialise la position de l'aspirateur en (0,0)
-        public void restart_vacuum_position(Case[,] cases)
+        public void set_intention(List<String> new_intentions)
         {
-            vacuum_case.set_is_vacuum(false);
-            vacuum_case = cases[0, 0];
-            vacuum_case.set_is_vacuum(true);
-            belief.set_agent_position(0, 0);
+            intentions = new List<string>(new_intentions);
         }
 
-        // Déplace l'aspirateur en fonction de la liste d'actions passée en paramètre
-        public void move(List<String> actions, Case[,] cases)
+        // Déplace l'aspirateur en fonction de la liste de ses intentions.
+        public void move(Case[,] cases)
         {
             int x = belief.get_position().Item1;
             int y = belief.get_position().Item2;
 
-
-
-            foreach (String action in actions)
+            for(int i = 0; i<intentions.Count; i++)
             {
                 vacuum_case.set_is_vacuum(false);
-                if (action == "up")
+                if (intentions[i] == "up")
                 {
                     y -= 1;
                 }
-                else if (action == "down")
+                else if (intentions[i] == "down")
                 {
                     y += 1;
                 }
-                else if (action == "right")
+                else if (intentions[i] == "right")
                 {
                     x += 1;
                 }
 
-                else if (action == "left")
+                else if (intentions[i] == "left")
                 {
                     x -= 1;
                 }
@@ -133,8 +137,6 @@ namespace Chourbot_vacuum
         {
             vacuum_case.clean_jewelry();
             vacuum_case.clean_dust();
-
-            electricity_unit++;
 
             // On supprime de la liste objects_searched l'objet qui a été supprimé (clean)
             (int, int) no_more_object_here = belief.agent_position;
@@ -163,18 +165,30 @@ namespace Chourbot_vacuum
             }
         }
 
-        // Choisi une action en fonction du type de l'objet
+        // Choisi d'effectuer ou non une action en fonction du type de l'objet
         public void choose_action()
         {
-            electricity_unit++;
-            if (vacuum_case.get_jewelry_status())
+             if((vacuum_case.get_dust_status() == true) || (vacuum_case.get_jewelry_status() == true))
             {
-                pick_up_jewelry();
-            }
-            else if (vacuum_case.get_dust_status())
-            {
+
+                if ((vacuum_case.get_dust_status() == true) && (vacuum_case.get_jewelry_status() == true))
+                {
+                    jewelry_picked_up++;
+                    dust_cleaned++;
+                }
+                else if ((vacuum_case.get_jewelry_status() == true))
+                {
+                    jewelry_picked_up++;
+                }
+                else if ((vacuum_case.get_dust_status() == true))
+                {
+                    dust_cleaned++;
+                }
                 clean_case();
+                electricity_unit++;
             }
+
+
         }
 
         // Création de noeuds à partir du noeud passé en paramètre et de la liste d'actions possibles (haut, bas, gauche, droite)
@@ -182,42 +196,42 @@ namespace Chourbot_vacuum
         {
             List<Node> nodes = new List<Node>();
 
-            foreach (String intention in intentions)
+            foreach (String action in problem.actions)
             {
                 Node child_node = new Node(curent_node);
 
                 int agent_x = curent_node.State.agent_position.Item1;
                 int agent_y = curent_node.State.agent_position.Item2;
 
-                if (intention == "up")
+                if (action == "up")
                 {
                     if (curent_node.State.agent_position.Item2 > 0)
                         agent_y -= 1;
                     else
                         continue;
                 }
-                else if (intention == "down")
+                else if (action == "down")
                 {
                     if (curent_node.State.agent_position.Item2 < 4)
                         agent_y += 1;
                     else
                         continue;
                 } 
-                else if (intention == "left")
+                else if (action == "left")
                 {
                     if (curent_node.State.agent_position.Item1 > 0)
                         agent_x -= 1;
                     else
                         continue;
                 }
-                else if (intention == "right")
+                else if (action == "right")
                 {
                     if (curent_node.State.agent_position.Item1 < 4)
                         agent_x += 1;
                     else
                         continue;
                 }
-                child_node.Action.Add(intention);
+                child_node.Action.Add(action);
                 child_node.State.set_agent_position(agent_x, agent_y);
                 nodes.Add(child_node);
             }
@@ -237,7 +251,7 @@ namespace Chourbot_vacuum
             return false;
         }
 
-        // Fonction de calcul de l'objet le plus proche de l'agent
+        // Calcul l'objet le plus proche de l'agent
         public Object closest_object()
         {
             int vacuum_x = belief.agent_position.Item1;
@@ -246,11 +260,17 @@ namespace Chourbot_vacuum
             Object object_searched = new Object();
 
             double distance_object_searched = 100;
+            double distance = 0;
 
-            for(int i = 0 ; i < objects_searched.Count; i++)
+            for (int i = 0 ; i < objects_searched.Count; i++)
             {
-                double distance = Math.Sqrt(Math.Pow(objects_searched[i].position.Item1 - vacuum_x, 2) + Math.Pow(objects_searched[i].position.Item2 - vacuum_y, 2));
-
+                try { 
+                    distance = Math.Sqrt(Math.Pow(objects_searched[i].position.Item1 - vacuum_x, 2) + Math.Pow(objects_searched[i].position.Item2 - vacuum_y, 2));
+                }
+                catch(NullReferenceException e)
+                {
+                    Console.WriteLine("error with the distance calcul", e);
+                }
                 if (distance_object_searched > distance)
                 {
                     distance_object_searched = distance;
@@ -270,6 +290,7 @@ namespace Chourbot_vacuum
 
 
         // ------------- Algorithmes d'exploration -------------
+        // Breadth First Search
         public List<String> explorationBFS()
         {
             // Listes d'actions à retourner
@@ -289,7 +310,7 @@ namespace Chourbot_vacuum
             int iteration_number = 0;
             bool leave = false;
 
-            while (nodes_to_be_explored.Count != 0)
+            while ((nodes_to_be_explored.Count != 0) && (leave == false))
             {
                 // On récupère le premier noeud
                 curent_node = nodes_to_be_explored.Dequeue();
@@ -302,14 +323,9 @@ namespace Chourbot_vacuum
                 {
                     if (objects_searched[i].position == curent_node.State.agent_position)
                     {
-                        sequence_actions = curent_node.Action;
                         leave = true;
                         break;
                     }
-                }
-                if(leave == true)
-                {
-                    break;
                 }
 
                 // Liste de nouveaux noeuds créer à partir du noeud courrant
@@ -327,13 +343,14 @@ namespace Chourbot_vacuum
             }
 
             number_iteration_BFS = iteration_number;
+            sequence_actions = curent_node.Action;
 
             // Retourne une séquence d'actions à effectuer
             return sequence_actions;
         }
 
         // Exploration en s'appuyant sur l'algorithme A*
-        public List<String> explorationASTAR()
+        public List<String> explorationASTAR(int max_depth)
         {
             // Listes d'actions à retourner
             List<String> sequence_actions = new List<string>();
@@ -379,14 +396,18 @@ namespace Chourbot_vacuum
                 // Est ce que l'agent se situe au même endroit que l'objet recherché ?
                 if (searched_object.position == curent_node.State.agent_position)
                 {
-                    sequence_actions = curent_node.Action;
+                    break;
+                }
+
+                if (max_depth <= curent_node.Depth)
+                {
                     break;
                 }
 
                 // Liste de nouveaux noeuds créer à partir du noeud courrant
                 List<Node> new_nodes = new List<Node>(expand(curent_node));
 
-                // On ajoute les noeuds valides ( à la queue
+                // On ajoute les noeuds valides à la queue
                 foreach (Node child_node in new_nodes)
                 {
                     int agent_x = child_node.State.agent_position.Item1;
@@ -400,8 +421,10 @@ namespace Chourbot_vacuum
                 }
                 iteration_number++;
             }
-            // Console.WriteLine("Nombre d'itérations de l'algorithme Astar : " + i);
-            number_iteration_astar = iteration_number; 
+            // On extrait les données du noeud courant 
+            number_iteration_astar = iteration_number;
+            sequence_actions = curent_node.Action;
+
             return sequence_actions;
         }
     }

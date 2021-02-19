@@ -91,7 +91,6 @@
     <Compile Include="Problem.cs" />
     <Compile Include="State.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Sensor.cs" />
     <Compile Include="Vacuum.cs" />
     <Compile Include="Environment.cs">
       <SubType>Form</SubType>

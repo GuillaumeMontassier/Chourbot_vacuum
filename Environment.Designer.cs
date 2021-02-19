@@ -39,7 +39,6 @@ namespace Chourbot_vacuum
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restart_vacuum_position = new System.Windows.Forms.Button();
             this.start_vacuum = new System.Windows.Forms.Button();
             this.breadth_first_search = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -52,16 +51,20 @@ namespace Chourbot_vacuum
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.electricity_number = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.jewel_pick_up = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.dust = new System.Windows.Forms.Label();
+            this.jewel_pick_up = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.max_depth_selector = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.max_depth_selector)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -153,20 +156,10 @@ namespace Chourbot_vacuum
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
             // 
-            // restart_vacuum_position
-            // 
-            this.restart_vacuum_position.Location = new System.Drawing.Point(446, 404);
-            this.restart_vacuum_position.Name = "restart_vacuum_position";
-            this.restart_vacuum_position.Size = new System.Drawing.Size(198, 23);
-            this.restart_vacuum_position.TabIndex = 33;
-            this.restart_vacuum_position.Text = "Restart Vacuum Position";
-            this.restart_vacuum_position.UseVisualStyleBackColor = true;
-            this.restart_vacuum_position.Click += new System.EventHandler(this.restart_vacuum_position_Click);
-            // 
             // start_vacuum
             // 
             this.start_vacuum.AllowDrop = true;
-            this.start_vacuum.Location = new System.Drawing.Point(548, 196);
+            this.start_vacuum.Location = new System.Drawing.Point(599, 203);
             this.start_vacuum.Name = "start_vacuum";
             this.start_vacuum.Size = new System.Drawing.Size(96, 23);
             this.start_vacuum.TabIndex = 35;
@@ -253,7 +246,7 @@ namespace Chourbot_vacuum
             this.groupBox2.Controls.Add(this.astar_iteration_number);
             this.groupBox2.Location = new System.Drawing.Point(599, 38);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(125, 80);
+            this.groupBox2.Size = new System.Drawing.Size(135, 80);
             this.groupBox2.TabIndex = 45;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Iteration Number";
@@ -263,15 +256,15 @@ namespace Chourbot_vacuum
             this.groupBox3.Controls.Add(this.electricity_number);
             this.groupBox3.Location = new System.Drawing.Point(599, 124);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(125, 57);
+            this.groupBox3.Size = new System.Drawing.Size(135, 57);
             this.groupBox3.TabIndex = 46;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "electricity consummed";
+            this.groupBox3.Text = "Electricity Consummed";
             // 
             // electricity_number
             // 
             this.electricity_number.AutoSize = true;
-            this.electricity_number.Location = new System.Drawing.Point(66, 25);
+            this.electricity_number.Location = new System.Drawing.Point(57, 25);
             this.electricity_number.Name = "electricity_number";
             this.electricity_number.Size = new System.Drawing.Size(13, 13);
             this.electricity_number.TabIndex = 0;
@@ -281,41 +274,14 @@ namespace Chourbot_vacuum
             // 
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.label4);
-            this.groupBox4.Controls.Add(this.label3);
+            this.groupBox4.Controls.Add(this.dust);
             this.groupBox4.Controls.Add(this.jewel_pick_up);
             this.groupBox4.Location = new System.Drawing.Point(446, 124);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(147, 57);
             this.groupBox4.TabIndex = 47;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Objets ramassés";
-            // 
-            // jewel_pick_up
-            // 
-            this.jewel_pick_up.AutoSize = true;
-            this.jewel_pick_up.Location = new System.Drawing.Point(47, 25);
-            this.jewel_pick_up.Name = "jewel_pick_up";
-            this.jewel_pick_up.Size = new System.Drawing.Size(13, 13);
-            this.jewel_pick_up.TabIndex = 0;
-            this.jewel_pick_up.Text = "0";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(114, 25);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(13, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "0";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(79, 25);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Dust";
+            this.groupBox4.Text = "Objects Collected";
             // 
             // label5
             // 
@@ -326,17 +292,76 @@ namespace Chourbot_vacuum
             this.label5.TabIndex = 3;
             this.label5.Text = "Jewel";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(79, 25);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Dust";
+            // 
+            // dust
+            // 
+            this.dust.AutoSize = true;
+            this.dust.Location = new System.Drawing.Point(114, 25);
+            this.dust.Name = "dust";
+            this.dust.Size = new System.Drawing.Size(13, 13);
+            this.dust.TabIndex = 1;
+            this.dust.Text = "0";
+            // 
+            // jewel_pick_up
+            // 
+            this.jewel_pick_up.AutoSize = true;
+            this.jewel_pick_up.Location = new System.Drawing.Point(47, 25);
+            this.jewel_pick_up.Name = "jewel_pick_up";
+            this.jewel_pick_up.Size = new System.Drawing.Size(13, 13);
+            this.jewel_pick_up.TabIndex = 0;
+            this.jewel_pick_up.Text = "0";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.max_depth_selector);
+            this.groupBox5.Location = new System.Drawing.Point(477, 187);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(95, 51);
+            this.groupBox5.TabIndex = 49;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Max Depth A*";
+            // 
+            // max_depth_selector
+            // 
+            this.max_depth_selector.Location = new System.Drawing.Point(18, 19);
+            this.max_depth_selector.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.max_depth_selector.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.max_depth_selector.Name = "max_depth_selector";
+            this.max_depth_selector.Size = new System.Drawing.Size(60, 20);
+            this.max_depth_selector.TabIndex = 50;
+            this.max_depth_selector.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(872, 460);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.start_vacuum);
-            this.Controls.Add(this.restart_vacuum_position);
             this.Controls.Add(this.grid);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -355,6 +380,8 @@ namespace Chourbot_vacuum
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.max_depth_selector)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -371,7 +398,6 @@ namespace Chourbot_vacuum
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.Button restart_vacuum_position;
         private System.Windows.Forms.Button start_vacuum;
         private System.Windows.Forms.RadioButton breadth_first_search;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -386,8 +412,10 @@ namespace Chourbot_vacuum
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label dust;
         private System.Windows.Forms.Label jewel_pick_up;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.NumericUpDown max_depth_selector;
     }
 }
 

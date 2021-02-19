@@ -42,6 +42,9 @@ namespace Chourbot_vacuum
         // Mesure de performance
         int performance_mesure = 0;
 
+        // Objets de l'environnement
+        List<Object> objects = new List<Object>();
+
 
         public form1()
         {
@@ -62,7 +65,7 @@ namespace Chourbot_vacuum
         {
             generate_Object();
             var random = new Random();
-            t1.Interval = random.Next(3000, 8000);
+            t1.Interval = random.Next(500, 3000);
         }
 
         // Fonction pour rafraichirl'affichage toutes les 0.5 secondes.
@@ -72,6 +75,7 @@ namespace Chourbot_vacuum
             astar_iteration_number.Text = vacuum.get_number_iteration_astar().ToString();
             electricity_number.Text = vacuum.get_electricity_number().ToString();
             jewel_pick_up.Text = vacuum.get_jewel_pick_up().ToString();
+            dust.Text = vacuum.get_dust_cleaned().ToString();
         }
 
         // création de la grille et du robot 
@@ -102,8 +106,8 @@ namespace Chourbot_vacuum
                 }
             }
 
-            // Ajout de l'aspirateur dans une case
-            vacuum = new Vacuum(cases[0,0]);
+            // Ajout de l'aspirateur dans la position initial
+            vacuum = new Vacuum(cases[problem.x,problem.y]);
 
             // Lancement du thread de l'agent
             thread_vacuum_live = new thread.Thread(new thread.ThreadStart(vacuum_live));
@@ -123,14 +127,15 @@ namespace Chourbot_vacuum
                 if (breadth_first_search.Checked)
                     actions = vacuum.explorationBFS();
                 else if(a_star.Checked)
-                    actions = vacuum.explorationASTAR();
-                
+                    actions = vacuum.explorationASTAR((int)max_depth_selector.Value);
+
+                vacuum.set_intention(actions);
+
                 // On déplace l'aspirateur
-                vacuum.move(actions, cases);
+                vacuum.move(cases);
 
                 // Choose action and do it
                 vacuum.choose_action();
-
             }
         }
 
@@ -161,6 +166,16 @@ namespace Chourbot_vacuum
                 cases[index_random_column, index_random_row].spawn_jewelry();
             }
             Object new_object = new Object((index_random_column, index_random_row), type_object);
+
+            // Si l'objet exite déjà on ne le recréé pas
+            foreach(Object an_object in vacuum.objects_searched)
+            {
+                if((an_object.position == new_object.position) && (new_object.GetType() == an_object.GetType()))
+                {
+                    return;
+                }
+            }
+            // Mis à jour de l'environnement
             vacuum.objects_searched.Add(new_object);
 
         }
@@ -186,27 +201,25 @@ namespace Chourbot_vacuum
             }
         }
 
-        private void restart_vacuum_position_Click(object sender, EventArgs e)
-        {
-            vacuum.restart_vacuum_position(cases);
-        }
-
         private void breadth_first_search_CheckedChanged(object sender, EventArgs e)
         {
-            start_vacuum.Enabled = true;
+            if (!is_vacuum_alive)
+                start_vacuum.Enabled = true;
         }
 
         private void a_star_CheckedChanged(object sender, EventArgs e)
         {
-            start_vacuum.Enabled = true;
+            if(!is_vacuum_alive)
+                start_vacuum.Enabled = true;
         }
 
         private void start_vacuum_Click(object sender, EventArgs e)
         {
             is_vacuum_alive = true;
+            start_vacuum.Enabled = false;
             if (!thread_vacuum_live.IsAlive)
                 thread_vacuum_live.Start();
-            start_vacuum.Enabled = false;
+
         }
     }
 }

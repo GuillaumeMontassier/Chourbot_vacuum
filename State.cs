@@ -9,12 +9,9 @@ namespace Chourbot_vacuum
 {
     class State
     {
-        // La grille à l'état correspondant
-        // public DataGridView grid_state = new DataGridView();
 
         public Case agent_case;
 
-        // La position de l'agent / Position initiale de l'agent
         public (int, int) agent_position = (0, 0);
 
         public State()

@@ -9,9 +9,6 @@ namespace Chourbot_vacuum
 {
     public class Case
     {
-        // Position
-       /* public int x, y;*/
-
         public bool is_there_an_object = true;
         private bool jewelry = false;
         private bool dust = false;
@@ -25,20 +22,6 @@ namespace Chourbot_vacuum
         {
             cell = new_cell;
         }
-
-        /*        public Case(DataGridViewCell new_cell, int new_x, int new_y)
-                {
-                    cell = new_cell;
-                    x = new_x;
-                    y = new_y;
-                }*/
-
-
-        /*        public void set_position(int new_x, int new_y)
-                {
-                    x = new_x;
-                    y = new_y;
-                }*/
 
         public bool get_is_vacuum()
         {
@@ -81,6 +64,7 @@ namespace Chourbot_vacuum
             case_text();
         }
 
+        // Mis à jour de la grille visuelle en fonction de l'état de la case
         public void case_text()
         {
             if ((jewelry == true) && (dust== true) && (is_vacuum == true))
@@ -106,6 +90,10 @@ namespace Chourbot_vacuum
             else if((jewelry == false) && (dust == false) && (is_vacuum == true))
             {
                 cell.Value = "vacuum";
+            }
+            else if ((jewelry == true) && (dust == true) && (is_vacuum == false))
+            {
+                cell.Value = "dust jewelry";
             }
             else
             {

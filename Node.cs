@@ -15,13 +15,6 @@ namespace Chourbot_vacuum
 		set { m_parent_node = value; }
     }
 
-		/*private string m_action;
-				public string Action
-				{
-					get { return m_action; }
-					set { m_action = value; }
-		}*/
-
 		private List<string> m_action = new List<String>();
 		public List<string> Action
 		{
