@@ -12,7 +12,7 @@ namespace Chourbot_vacuum
         public int x = 0;
         public int y = 0;
 
-        // Actions possibles
+        // Déplacements possibles
         public List<String> actions = new List<String>(new string[] { "up", "down", "left", "right" });
     }
 }

@@ -9,12 +9,10 @@ namespace Chourbot_vacuum
 {
     public class Case
     {
-        public bool is_there_an_object = true;
+        // Est ce que la case contient un bijou ? de la poussière ? l'aspirateur ?
         private bool jewelry = false;
         private bool dust = false;
         private bool is_vacuum = false;
-
-        public bool marked = false;
 
         public DataGridViewCell cell;
 
@@ -38,33 +36,41 @@ namespace Chourbot_vacuum
         {
             return jewelry;
         }
+
+        public bool get_dust_status()
+        {
+            return dust;
+        }
+
+        // Faire apparaître le bijou dans la case
         public void spawn_jewelry()
         {
             jewelry = true;
             case_text();
         }
+
+        // Enlever le bijou
         public void clean_jewelry()
         {
             jewelry = false;
             case_text();
         }
 
-        public bool get_dust_status()
-        {
-            return dust;
-        }
+        // Faire apparaitre la poussière
         public void spawn_dust()
         {
             dust = true;
             case_text();
         }
+
+        // Nettoyer la poussière
         public void clean_dust()
         {
             dust = false;
             case_text();
         }
 
-        // Mis à jour de la grille visuelle en fonction de l'état de la case
+        // Mise à jour de la grille visuelle en fonction de l'état de la case
         public void case_text()
         {
             if ((jewelry == true) && (dust== true) && (is_vacuum == true))

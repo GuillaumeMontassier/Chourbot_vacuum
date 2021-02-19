@@ -15,6 +15,7 @@ namespace Chourbot_vacuum
 		set { m_parent_node = value; }
     }
 
+		// Liste d'actions pour arriver jusqu'à ce noeud.
 		private List<string> m_action = new List<String>();
 		public List<string> Action
 		{
@@ -29,7 +30,7 @@ namespace Chourbot_vacuum
 			set { m_state = value; }
 		}
 
-		// Coût résultant de la fonction heuristique dans la classe agent Vacuum.cs
+		// Coût résultant de la fonction heuristique dans la classe agent Vacuum
 		private double m_path_cost = 100.0;
 		public double Path_Cost
 		{

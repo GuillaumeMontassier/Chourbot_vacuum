@@ -25,6 +25,7 @@ namespace Chourbot_vacuum
             Interval = 2000
         };
 
+        // Timer pour rafraichir les données sur l'affichage
         Timer t2 = new Timer
         {
             Interval = 500
@@ -36,14 +37,8 @@ namespace Chourbot_vacuum
         // Aspirateur
         Vacuum vacuum;
 
-        // Problem
+        // Problème
         Problem problem = new Problem();
-
-        // Mesure de performance
-        int performance_mesure = 0;
-
-        // Objets de l'environnement
-        List<Object> objects = new List<Object>();
 
 
         public form1()
@@ -60,7 +55,7 @@ namespace Chourbot_vacuum
             t2.Start();
         }
 
-        // Fonction qui va générer aléatoirement un objet toutes les 3 à 8 secondes
+        // Fonction qui génére aléatoirement un objet toutes les 0.5 à 3 secondes
         private void timer_tick(object sender, EventArgs e)
         {
             generate_Object();
@@ -68,7 +63,7 @@ namespace Chourbot_vacuum
             t1.Interval = random.Next(500, 3000);
         }
 
-        // Fonction pour rafraichirl'affichage toutes les 0.5 secondes.
+        // Fonction pour rafraichir l'affichage toutes les 0.5 secondes.
         private void timer_refresh_tick(object sender, EventArgs e)
         {
             bfs_iteration_number.Text = vacuum.get_number_iteration_BFS().ToString();
@@ -123,12 +118,13 @@ namespace Chourbot_vacuum
                 }
                 List<String> actions = new List<String>();
 
-                // Choix de l'algorithme d'exploration (en fonction de l'état des radios buttons
+                // Choix de l'algorithme d'exploration (en fonction de l'état des radios buttons)
                 if (breadth_first_search.Checked)
                     actions = vacuum.explorationBFS();
                 else if(a_star.Checked)
                     actions = vacuum.explorationASTAR((int)max_depth_selector.Value);
 
+                // Mise à jour des intentions (actions) de l'aspirateur pour atteindre son objectif
                 vacuum.set_intention(actions);
 
                 // On déplace l'aspirateur
@@ -167,7 +163,7 @@ namespace Chourbot_vacuum
             }
             Object new_object = new Object((index_random_column, index_random_row), type_object);
 
-            // Si l'objet exite déjà on ne le recréé pas
+            // Si l'objet exite déjà on ne l'ajoute pas
             foreach(Object an_object in vacuum.objects_searched)
             {
                 if((an_object.position == new_object.position) && (new_object.GetType() == an_object.GetType()))
@@ -175,7 +171,7 @@ namespace Chourbot_vacuum
                     return;
                 }
             }
-            // Mis à jour de l'environnement
+            // On ajoute le nouvel élément dans la liste d'objets recherchés par l'agent
             vacuum.objects_searched.Add(new_object);
 
         }

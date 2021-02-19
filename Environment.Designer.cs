@@ -259,7 +259,7 @@ namespace Chourbot_vacuum
             this.groupBox3.Size = new System.Drawing.Size(135, 57);
             this.groupBox3.TabIndex = 46;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Electricity Consummed";
+            this.groupBox3.Text = "Electricity Consumed";
             // 
             // electricity_number
             // 
